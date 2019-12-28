@@ -54,42 +54,45 @@ def create_app(test_config=None):
 
     @app.route('/api/questions/<int:question_id>', methods=['DELETE'])
     def delete_question(question_id):
-        response = {}
         question = Question.query.get(question_id)
+
+        if question is None:
+            abort(404)
+
         try:
-            response['request'] = question.format()
             question.delete()
-            db.session.commit()
-            response['success'] = True
-        except:
-            db.session.rollback()
-            response['success'] = False
-        finally:
-            db.session.close()
-            return jsonify(response)
+
+            return jsonify({
+                'success': True,
+                'request': question.format()
+            })
+
+        except BaseException:
+            abort(422)
 
     @app.route('/api/questions', methods=['POST'])
     def create_new_question():
-        response = {}
+        body = request.get_json()
+
         try:
-            answer = request.json['answer']
-            question = request.json['question']
-            difficulty = request.json['difficulty']
-            category = request.json['category']
+            answer = body.get('answer', None)
+            question = body.get('question', None)
+            difficulty = body.get('difficult', None)
+            category = body.get('category', None)
 
             question = Question(
                 question=question, answer=answer,
                 category=category, difficulty=difficulty)
-            response['request'] = question.format()
             question.insert()
-            db.session.commit()
-            response['success'] = True
-        except:
-            db.session.rollback()
-            response['success'] = False
-        finally:
-            db.session.close()
-            return jsonify(response)
+
+            return jsonify({
+                'success': True,
+                'request': question.format()
+            })
+
+        except BaseException:
+            abort(422)
+
 
     @app.route('/api/questions/search', methods=['POST'])
     def search_questions():
