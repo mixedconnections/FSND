@@ -41,50 +41,50 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'Resource not found')
 
     def test_categories_all(self):
-        res = self.client().get('/api/categories')
+        res = self.client().get('/categories')
         self.assertEqual(res.status_code, 200)
 
     def test_questions_by_id(self):
-        res = self.client().get('/api/categories/1/questions')
+        res = self.client().get('/categories/1/questions')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['total_questions'], 1)
 
     def test_questions_paginated(self):
-        res = self.client().get('/api/questions')
+        res = self.client().get('/questions')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data['success'])
 
     def test_questions_by_id_fail(self):
-        res = self.client().get('/api/categories/500/questions')
+        res = self.client().get('/categories/500/questions')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data['success'])
         self.assertEqual(data['total_questions'], 0)
 
     def test_search_questions(self):
-        res = self.client().post('/api/questions/search', json={'searchTerm':'Alexander'})
+        res = self.client().post('/questions/search', json={'searchTerm':'Alexander'})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertEqual(data['total_questions'], 1)
 
     def test_search_questions_fail(self):
-        res = self.client().post('/api/questions/search', json={'searchTerm':'foobar'})
+        res = self.client().post('/questions/search', json={'searchTerm':'foobar'})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertEqual(data['total_questions'], 0)
 
     def test_play_all(self):
-        res = self.client().post('/api/play', json={})
+        res = self.client().post('/play', json={})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
 
     def test_play_by_category(self):
-        res = self.client().post('/api/play', json={'quizCategory': 3})
+        res = self.client().post('/play', json={'quizCategory': 3})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
