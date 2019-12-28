@@ -14,7 +14,7 @@ def create_app(test_config=None):
     app = Flask(__name__)
     setup_db(app)
 
-    cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+    cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
     @app.after_request
     def after_request(response):
@@ -23,7 +23,7 @@ def create_app(test_config=None):
         response.headers.add('Access-Control-Allow-Methods', 'GET, PATCH, POST, DELETE, OPTIONS')
         return response
 
-    @app.route('/api/categories', methods=['GET'])
+    @app.route('/categories', methods=['GET'])
     def get_categories():
         categories = Category.query.all()
         formatted_categories = [c.format() for c in categories]
@@ -33,7 +33,7 @@ def create_app(test_config=None):
             "total_categories": len(formatted_categories)
         })
 
-    @app.route('/api/questions', methods=['GET'])
+    @app.route('/questions', methods=['GET'])
     def get_questions():
         page = request.args.get('page', 1, type=int)
         start = (page - 1) * QUESTIONS_PER_PAGE
@@ -52,7 +52,7 @@ def create_app(test_config=None):
 
         })
 
-    @app.route('/api/questions/<int:question_id>', methods=['DELETE'])
+    @app.route('/questions/<int:question_id>', methods=['DELETE'])
     def delete_question(question_id):
         question = Question.query.get(question_id)
 
@@ -70,7 +70,7 @@ def create_app(test_config=None):
         except BaseException:
             abort(422)
 
-    @app.route('/api/questions', methods=['POST'])
+    @app.route('/questions', methods=['POST'])
     def create_new_question():
         body = request.get_json()
 
@@ -94,7 +94,7 @@ def create_app(test_config=None):
             abort(422)
 
 
-    @app.route('/api/questions/search', methods=['POST'])
+    @app.route('/questions/search', methods=['POST'])
     def search_questions():
         search_term = request.json['searchTerm']
         search_results = Question.query.filter(
@@ -106,7 +106,7 @@ def create_app(test_config=None):
             "total_questions": len(formatted_search_results)
         })
 
-    @app.route('/api/categories/<int:category_id>/questions', methods=['GET'])
+    @app.route('/categories/<int:category_id>/questions', methods=['GET'])
     def get_category_questions(category_id):
         category_id = str(category_id)
         questions = Question.query.filter_by(category=category_id).all()
@@ -118,7 +118,7 @@ def create_app(test_config=None):
             "currentCategory": category_id
         })
 
-    @app.route('/api/play', methods=['POST'])
+    @app.route('/play', methods=['POST'])
     def play():
 
         category_id = str(request.json['quizCategory']) if 'quizCategory' in request.json else None
