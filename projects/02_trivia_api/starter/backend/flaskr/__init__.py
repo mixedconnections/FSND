@@ -20,7 +20,9 @@ def create_app(test_config=None):
     def after_request(response):
         response.headers.add('Access-Control-Allow-Headers',
                              'Content-Type,Authorization')
-        response.headers.add('Access-Control-Allow-Methods', 'GET, PATCH, POST, DELETE, OPTIONS')
+        response.headers.add(
+            'Access-Control-Allow-Methods',
+            'GET, PATCH, POST, DELETE, OPTIONS')
         return response
 
     @app.route('/categories', methods=['GET'])
@@ -93,7 +95,6 @@ def create_app(test_config=None):
         except BaseException:
             abort(422)
 
-
     @app.route('/questions/search', methods=['POST'])
     def search_questions():
         search_term = request.json['searchTerm']
@@ -121,18 +122,18 @@ def create_app(test_config=None):
     @app.route('/play', methods=['POST'])
     def play():
 
-        category_id = str(request.json['quizCategory']) if 'quizCategory' in request.json else None
+        category_id = str(
+            request.json['quizCategory']) if 'quizCategory' in request.json else None
         previous_question_ids = (request.json['previousQuestions']
                                  if 'previousQuestions' in request.json
                                  else None)
 
-        choices = (Question.query.filter(Question.id.notin_(previous_question_ids)).filter(Question.category == category_id).all()
-                   if category_id and previous_question_ids
-                   else Question.query.filter(Question.id.notin_(previous_question_ids)).all()
-                   if previous_question_ids
-                   else Question.query.filter(Question.category == category_id).all()
-                   if category_id
-                   else Question.query.all())
+        choices = (
+            Question.query.filter(
+                Question.id.notin_(previous_question_ids)).filter(
+                Question.category == category_id).all() if category_id and previous_question_ids else Question.query.filter(
+                Question.id.notin_(previous_question_ids)).all() if previous_question_ids else Question.query.filter(
+                    Question.category == category_id).all() if category_id else Question.query.all())
 
         if len(choices) > 0:
             selected_question = random.choice(choices)
