@@ -48,7 +48,7 @@ def get_token_auth_header():
     if len(header_parts) == 1:
         raise AuthError({
             'code': 'invalid_header',
-            'description': 'Token not found.'
+            'description': 'Token was not found.'
         }, 401)
 
     if len(header_parts) > 2:
@@ -76,13 +76,13 @@ def check_permissions(permission, payload):
         raise AuthError({
             'code': 'invalid_claims',
             'description': 'Permissions not included in JWT.'
-        }, 400)
+        }, 401)
 
     if permission not in payload['permissions']:
         raise AuthError({
             'code': 'unauthorized',
-            'description': 'Permission not found.'
-        }, 403)
+            'description': 'Permission was not found.'
+        }, 401)
     return True
 
 '''
@@ -149,7 +149,7 @@ def verify_decode_jwt(token):
     raise AuthError({
                 'code': 'invalid_header',
                 'description': 'Unable to find the appropriate key.'
-            }, 400)
+            }, 401)
 
 '''
 @TODO implement @requires_auth(permission) decorator method
