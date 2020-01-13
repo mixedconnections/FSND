@@ -87,9 +87,37 @@ GET '/categories'
 '5' : "Entertainment",
 '6' : "Sports"}
 
-```
+GET '/questions'
+- fetches a dictionary of all the questions ordered by the question's ID. Paginates the results and only shows the first ten 
+- request arguments: None
+- Returns: An object with all the questions paginated by groups of ten. 
+To reuturn the second page requires the use of parameters so /questions?page=2 will return questions 11-20
 
+DELETE '/questions/<int:question_id>'
+- Deletes the specified question by the question id 
+- request arguments: question id. Will be used to delete the specified question
+- returns:  a json object that confirms the deletion
 
+POST '/questions'
+- creates a question based on json passed to the object 
+- request arguments: None
+- returns: The new question along with the number of total questions 
+
+POST '/questions/search'
+- queries the database for a specified search term 
+- request arguments: None
+- returns: returns a dictionary of all the objects that the search term found in the database 
+
+GET '/categories/<int:category>/questions'
+- returns all the questions in a specified category
+- request arguments: the category id is used to fetch the proper questions based on that category
+- returns: Returns a dictionary of all the questions in the specified category
+
+POST '/play'
+- queries the database for a single question that is not one of the questions queried before 
+- request arguments: None
+- returns a single question that is unlike the previous questions. Requires you to post a list of previous questions to ensure that those questions are not repeated. 
+ ```
 ## Testing
 To run the tests, run
 ```
