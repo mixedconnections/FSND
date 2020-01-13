@@ -43,7 +43,7 @@ def get_drinks():
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
-@app.route('/drinks-detail', methods=['GET'])
+@app.route('/drinks-detail')
 @requires_auth("get:drinks-detail")
 def get_drinks_details(payload):
     return jsonify({
@@ -122,7 +122,7 @@ def patch_drinks(payload, drink_id):
 
         return jsonify({
             'success': True,
-            'drinks': drink_updated.long()
+            'drinks': [drink_updated.long()]
         })
 
     except:
